@@ -1,4 +1,7 @@
 from flask import Flask, render_template, request, flash
+import xgboost
+print(xgboost.__version__)
+
 from main import schedule_every_day
 app = Flask(__name__)
 app.secret_key = "manbearpig_MUDMAN888"
