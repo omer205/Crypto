@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, flash
 from main import schedule_every_day
 app = Flask(__name__)
 app.secret_key = "manbearpig_MUDMAN888"
+LOCAL_RUN = False
+AWS_PORT = 8080
 
 with open('user_list.txt', 'r') as filehandle:
     email = filehandle.read()
@@ -30,5 +32,7 @@ def greeter():
 
 
 if __name__ == '__main__':
-    app.run()
-    schedule_every_day()
+    if LOCAL_RUN:
+        app.run()
+    else:
+        app.run(host='0.0.0.0', port=AWS_PORT)
