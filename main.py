@@ -7,6 +7,7 @@ SUBJECT = 'BTC Signal - ITC Project'
 TEXT_HOLD = 'Hello,\n Today is a good day. We recommend you to stay in.'
 TEXT_OUT = 'Hello,\n Today is a bad day. We recommend you to be out.'
 MODEL_FILENAME = 'model'
+TEST = 1
 
 def get_message():
     prediction = get_signal(model)[0]
@@ -74,6 +75,8 @@ def schedule_every_day():
 
     schedule.every().day.at("12:05").do(send_mail) #every day at 12:05 this func call send mail func
     schedule.every().day.at("00:05").do(send_mail)
+    if TEST:
+        schedule.every(30).seconds.do(send_mail)
     while True:
         # Checks whether a scheduled task
         # is pending to run or not
