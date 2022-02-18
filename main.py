@@ -1,58 +1,80 @@
 import smtplib, ssl, schedule, time, pickle
+from smtplib import SMTP
+import sys
+
+import personal
+
 from model import get_signal
 
-#use this function when you implemented variable prediction in the function send mail
-#message = message() line 40
 SUBJECT = 'BTC Signal - ITC Project'
 TEXT_HOLD = 'Hello,\n Today is a good day. We recommend you to stay in.'
 TEXT_OUT = 'Hello,\n Today is a bad day. We recommend you to be out.'
 MODEL_FILENAME = 'model'
-TEST = 1
+HOLD_BTC = 1
+PORT = 587  # For starttls it is the default mail submission port.
+EMAIL_SENDER = "projectitcbtc@gmail.com"
+EMAIL_PASSWORD = personal.PASSWORD  # stored in separate file 'personal'
+SERVER_SMTP = "smtp.gmail.com"
+EMAILS_LIST = "user_list.txt"
+SCHEDULE_1 = "12:05"
+SCHEDULE_2 = "00:05"
+TEST_FREQUENCY = 30
+if len(sys.argv) == 2:
+    TEST = True
+
 
 def get_message():
+    """"
+    Gets prediction signal from imported get_signal function and
+    returns: string - message according to the signal
+    """
     prediction = get_signal(model)[0]
-    if prediction == 1 :
+    if prediction == HOLD_BTC:
         message = 'Subject: {}\n\n{}'.format(SUBJECT, TEXT_HOLD)
-
     else:
         message = 'Subject: {}\n\n{}'.format(SUBJECT, TEXT_OUT)
     return message
 
+
+def read_from_txt():
+    """
+    open file and read the content in a list
+    return: list of strings
+    """
+    a_file = open(EMAILS_LIST, "r")
+    receiver_email = [(line.strip()).split() for line in a_file]
+    a_file.close()
+    return receiver_email
+
+
 def send_mail():
-
     """
-    the function send email from python using library smtplib
+    The function sends email from python using library smtplib
     """
+    global server  # initialize a variable server
 
-    global server #initialize a variable server
-
-    #Google SMTP server is a free service that will enable you to send emails from your website, web app or domain.
-    #SMTP means Simple Mail Transfer Protocol and it allows you to send emails between servers.
+    # Google SMTP server is a free service that will enable you to send emails from your website, web app or domain.
+    # SMTP means Simple Mail Transfer Protocol and it allows you to send emails between servers.
     # Most emails are sent from this server – in fact, if you use Gmail or any Google app, you are using this server.
 
-    smtp_server = "smtp.gmail.com"
-    port = 587  # For starttls it is the default mail submission port.
-    sender_email = "projectitcbtc@gmail.com" # our group email
-    password = "helloworld123" #email password
-    receiver_email = read_from_txt() #catch all mail adress from the file user_list.txt and return as a list
+    smtp_server = SERVER_SMTP
+    port = PORT
+    sender_email = EMAIL_SENDER  # Email from which prediction message is sent
+    # password = "helloworld123"  # email password
+    password = EMAIL_PASSWORD
+    receiver_email = read_from_txt()
 
-    #add predict value here
-
-    # message = """\
-    # Subject: cryptocurrency project
-    #
-    # hello , This message is sent from Python."""
     message = get_message()
-    context = ssl.create_default_context() # Create a secure SSL context
+    context = ssl.create_default_context()  # Create a secure SSL context
 
     # Try to log in to server and send email
     try:
-        server = smtplib.SMTP(smtp_server, port)
+        server: SMTP = smtplib.SMTP(smtp_server, port)
         server.ehlo()  # Can be omitted
         server.starttls(context=context)  # Secure the connection
         server.ehlo()  # Can be omitted
-        server.login(sender_email, password) #lgin to the send account
-        server.sendmail(sender_email, receiver_email, message) #send message to everyone from the mist
+        server.login(sender_email, password)  # login to the send account
+        server.sendmail(sender_email, receiver_email, message)  # send message to everyone from the list
     except Exception as e:
         # Print any error messages to stdout
         print(e)
@@ -60,23 +82,15 @@ def send_mail():
         server.quit()
 
 
-def read_from_txt():
-    # open file and read the content in a list
-    a_file = open("user_list.txt", "r")
-
-    receiver_email = [(line.strip()).split() for line in a_file]
-
-    a_file.close()
-
-    return receiver_email
-
-
 def schedule_every_day():
-
-    schedule.every().day.at("12:05").do(send_mail) #every day at 12:05 this func call send mail func
-    schedule.every().day.at("00:05").do(send_mail)
+    """
+    Sends prediction message email according to defined schedule.
+    There is regular schedule and schedule for testing purposes.
+    """
+    schedule.every().day.at(SCHEDULE_1).do(send_mail)
+    schedule.every().day.at(SCHEDULE_2).do(send_mail)
     if TEST:
-        schedule.every(30).seconds.do(send_mail)
+        schedule.every(TEST_FREQUENCY).seconds.do(send_mail)
     while True:
         # Checks whether a scheduled task
         # is pending to run or not
