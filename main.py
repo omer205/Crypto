@@ -2,26 +2,8 @@ import smtplib, ssl, schedule, time, pickle
 from smtplib import SMTP
 import sys
 import argparse
-
-sys.path.append(r'C:\Users\marin\My Drive\ITC\crypto')
-# import personal
-
 from model import get_signal
-
-SUBJECT = 'BTC Signal - ITC Project'
-TEXT_HOLD = 'Hello,\n Today is a good day. We recommend you to stay in.'
-TEXT_OUT = 'Hello,\n Today is a bad day. We recommend you to be out.'
-MODEL_FILENAME = 'model'
-HOLD_BTC = 1
-PORT = 587  # For starttls it is the default mail submission port.
-EMAIL_SENDER = "projectitcbtc@gmail.com"
-# EMAIL_PASSWORD = personal.PASSWORD  # stored in separate file 'personal'
-EMAIL_PASSWORD = 'helloworld123'
-SERVER_SMTP = "smtp.gmail.com"
-EMAILS_LIST = "user_list.txt"
-SCHEDULE_1 = "12:05"
-SCHEDULE_2 = "00:05"
-TEST_FREQUENCY = 30
+from config import *
 
 parser = argparse.ArgumentParser(
     description="-t (optional) for testing frequency")
@@ -66,7 +48,6 @@ def send_mail():
     smtp_server = SERVER_SMTP
     port = PORT
     sender_email = EMAIL_SENDER  # Email from which prediction message is sent
-    # password = "helloworld123"  # email password
     password = EMAIL_PASSWORD
     print(password)
     receiver_email = read_from_txt()

@@ -2,17 +2,7 @@ from datetime import date, timedelta
 import numpy as np
 import pandas as pd
 import yfinance as yf
-
-TODAY = date.today()
-PERIOD = 18
-STATUS = 'Open'
-MODEL_FILENAME = 'model'
-FREQUENCY = "1h"
-CRYPTO = "btc-usd"
-SCHEDULE_1 = 0
-SCHEDULE_2 = 12
-NUM_LAGS = 2 * PERIOD
-
+from config import *
 
 def pull_data():
     """
