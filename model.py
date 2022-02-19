@@ -4,6 +4,7 @@ import pandas as pd
 import yfinance as yf
 from config import *
 
+TODAY = date.today()
 def pull_data():
     """
     Function downloads crypto currency according to defined frequency and for defined period.

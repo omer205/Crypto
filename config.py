@@ -15,7 +15,6 @@ SCHEDULE_2 = "00:05"
 TEST_FREQUENCY = 30
 
 #Prediction and Data Constants
-TODAY = date.today()
 PERIOD = 18
 STATUS = 'Open'
 MODEL_FILENAME = 'model'
