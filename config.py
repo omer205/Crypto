@@ -11,6 +11,8 @@ EMAIL_PASSWORD = 'helloworld123'
 SERVER_SMTP = "smtp.gmail.com"
 EMAILS_LIST = "user_list.txt"
 TEST_FREQUENCY = 30
+SCHEDULE_1 = "12:05"
+SCHEDULE_2 = "00:05"
 
 #Prediction and Data Constants
 PERIOD = 18
@@ -18,6 +20,6 @@ STATUS = 'Open'
 MODEL_FILENAME = 'model'
 FREQUENCY = "1h"
 CRYPTO = "btc-usd"
-SCHEDULE_1 = 0
-SCHEDULE_2 = 12
+HR1 = 0
+HR2 = 12
 NUM_LAGS = 2 * PERIOD

@@ -1,17 +1,14 @@
-import smtplib, ssl, schedule, time, pickle
-from smtplib import SMTP
-import sys
 import argparse
-from model import get_signal
+import pickle
+import schedule
+import smtplib
+import ssl
+import sys
+import time
+from smtplib import SMTP
+
 from config import *
-
-parser = argparse.ArgumentParser(
-    description="-t (optional) for testing frequency")
-parser.add_argument("-t", action='store_true', help="type [-t] to have testing frequency of prediction")
-args = parser.parse_args()
-
-SCHEDULE_1 = "12:05"
-SCHEDULE_2 = "00:05"
+from model import get_signal
 
 def get_message():
     """"
@@ -71,14 +68,14 @@ def send_mail():
         server.quit()
 
 
-def schedule_every_day():
+def schedule_every_day(test=False):
     """
     Sends prediction message email according to defined schedule.
     There is regular schedule and schedule for testing purposes.
     """
     schedule.every().day.at(SCHEDULE_1).do(send_mail)
     schedule.every().day.at(SCHEDULE_2).do(send_mail)
-    if args.t:
+    if test:
         schedule.every(TEST_FREQUENCY).seconds.do(send_mail)
     while True:
         # Checks whether a scheduled task
@@ -88,5 +85,9 @@ def schedule_every_day():
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description="-t (optional) for testing frequency")
+    parser.add_argument("-t", action='store_true', help="type [-t] to have testing frequency of prediction")
+    args = parser.parse_args()
     model = pickle.load(open(MODEL_FILENAME, 'rb'))
-    schedule_every_day()
+    schedule_every_day(test=args.t)

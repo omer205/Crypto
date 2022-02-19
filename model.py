@@ -4,15 +4,16 @@ import pandas as pd
 import yfinance as yf
 from config import *
 
-TODAY = date.today()
+
 def pull_data():
     """
     Function downloads crypto currency according to defined frequency and for defined period.
     Value at the time of interest is pulled (e.g. at 0 and 12 o'clock).
     :return: 1-row dataframe with most recent values in the defiend period as columns
     """
-    data = yf.download(tickers=CRYPTO, start=(TODAY - timedelta(days=PERIOD)), interval=FREQUENCY)
-    lags = data[STATUS].iloc[(data.index.hour == SCHEDULE_1) | (data.index.hour == SCHEDULE_2)]
+    today = date.today()
+    data = yf.download(tickers=CRYPTO, start=(today - timedelta(days=PERIOD)), interval=FREQUENCY)
+    lags = data[STATUS].iloc[(data.index.hour == HR1) | (data.index.hour == HR2)]
     lags = (lags - np.min(lags)) / (np.max(lags) - np.min(lags))
     lags = lags[-NUM_LAGS:]
     lags = pd.DataFrame(lags).T
@@ -20,13 +21,13 @@ def pull_data():
     return lags
 
 
-def get_signal(model):
+def get_signal(ml_model):
     """
-    :param model: prediction model for trading strategy
+    :param ml_model: prediction model for trading strategy
     The function activates function of pulling trading data and creating 1-row dataframe
     which is used in pretrained model for prediction.
     :return: prediction result of the model (0 or 1)
     """
     lags = pull_data()
-    signal = model.predict(lags)
+    signal = ml_model.predict(lags)
     return signal
