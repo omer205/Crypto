@@ -4,14 +4,14 @@ import pandas as pd
 import yfinance as yf
 
 TODAY = date.today()
-PERIOD = 6
-STATUS = 'Close'
+PERIOD = 18
+STATUS = 'Open'
 MODEL_FILENAME = 'model'
 FREQUENCY = "1h"
 CRYPTO = "btc-usd"
 SCHEDULE_1 = 0
 SCHEDULE_2 = 12
-NUM_LAGS = 2*PERIOD
+NUM_LAGS = 2 * PERIOD
 
 
 def pull_data():
@@ -28,6 +28,7 @@ def pull_data():
     lags.columns = [f'lag_{i}' for i in reversed(range(lags.shape[1]))]
     return lags
 
+
 def get_signal(model):
     """
     :param model: prediction model for trading strategy
@@ -38,5 +39,3 @@ def get_signal(model):
     lags = pull_data()
     signal = model.predict(lags)
     return signal
-
-

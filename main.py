@@ -1,8 +1,10 @@
 import smtplib, ssl, schedule, time, pickle
 from smtplib import SMTP
 import sys
+import argparse
 
-import personal
+sys.path.append(r'C:\Users\marin\My Drive\ITC\crypto')
+# import personal
 
 from model import get_signal
 
@@ -13,14 +15,18 @@ MODEL_FILENAME = 'model'
 HOLD_BTC = 1
 PORT = 587  # For starttls it is the default mail submission port.
 EMAIL_SENDER = "projectitcbtc@gmail.com"
-EMAIL_PASSWORD = personal.PASSWORD  # stored in separate file 'personal'
+# EMAIL_PASSWORD = personal.PASSWORD  # stored in separate file 'personal'
+EMAIL_PASSWORD = 'helloworld123'
 SERVER_SMTP = "smtp.gmail.com"
 EMAILS_LIST = "user_list.txt"
 SCHEDULE_1 = "12:05"
 SCHEDULE_2 = "00:05"
 TEST_FREQUENCY = 30
-if len(sys.argv) == 2:
-    TEST = True
+
+parser = argparse.ArgumentParser(
+    description="-t (optional) for testing frequency")
+parser.add_argument("-t", action='store_true', help="type [-t] to have testing frequency of prediction")
+args = parser.parse_args()
 
 
 def get_message():
@@ -62,6 +68,7 @@ def send_mail():
     sender_email = EMAIL_SENDER  # Email from which prediction message is sent
     # password = "helloworld123"  # email password
     password = EMAIL_PASSWORD
+    print(password)
     receiver_email = read_from_txt()
 
     message = get_message()
@@ -69,7 +76,7 @@ def send_mail():
 
     # Try to log in to server and send email
     try:
-        server: SMTP = smtplib.SMTP(smtp_server, port)
+        server = smtplib.SMTP(smtp_server, port)
         server.ehlo()  # Can be omitted
         server.starttls(context=context)  # Secure the connection
         server.ehlo()  # Can be omitted
@@ -89,7 +96,7 @@ def schedule_every_day():
     """
     schedule.every().day.at(SCHEDULE_1).do(send_mail)
     schedule.every().day.at(SCHEDULE_2).do(send_mail)
-    if TEST:
+    if args.t:
         schedule.every(TEST_FREQUENCY).seconds.do(send_mail)
     while True:
         # Checks whether a scheduled task

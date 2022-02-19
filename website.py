@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request, flash
+import sys
+sys.path.append(r'C:\Users\marin\My Drive\ITC\crypto')
+# import personal
 
 app = Flask(__name__)
-app.secret_key = "manbearpig_MUDMAN888"
+app.secret_key = 'manbearpig_MUDMAN888'
+# app.secret_key = personal.FLASK_KEY
 LOCAL_RUN = False
 AWS_PORT = 8080
 EMAILS_LIST = "user_list.txt"
@@ -25,7 +29,7 @@ def index():
 @app.route("/greet", methods=['POST', 'GET'])
 def greeter():
     """
-    Adding email address to distribution list.
+    Adding new email address to distribution list.
     """
     flash("Welcome " + str(request.form['name_input']) + ", you are now ready to get billionaire.")
     # if first time this email was given we add it to our list
