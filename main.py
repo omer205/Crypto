@@ -10,6 +10,8 @@ parser = argparse.ArgumentParser(
 parser.add_argument("-t", action='store_true', help="type [-t] to have testing frequency of prediction")
 args = parser.parse_args()
 
+SCHEDULE_1 = "12:05"
+SCHEDULE_2 = "00:05"
 
 def get_message():
     """"
@@ -49,7 +51,6 @@ def send_mail():
     port = PORT
     sender_email = EMAIL_SENDER  # Email from which prediction message is sent
     password = EMAIL_PASSWORD
-    print(password)
     receiver_email = read_from_txt()
 
     message = get_message()

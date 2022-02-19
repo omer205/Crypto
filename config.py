@@ -10,8 +10,6 @@ EMAIL_SENDER = "projectitcbtc@gmail.com"
 EMAIL_PASSWORD = 'helloworld123'
 SERVER_SMTP = "smtp.gmail.com"
 EMAILS_LIST = "user_list.txt"
-SCHEDULE_1 = "12:05"
-SCHEDULE_2 = "00:05"
 TEST_FREQUENCY = 30
 
 #Prediction and Data Constants
